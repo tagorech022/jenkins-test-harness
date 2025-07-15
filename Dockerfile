@@ -1,22 +1,21 @@
-# Use official Jenkins base image with Java 17
 FROM jenkins/jenkins:lts-jdk17
 
-# Install plugin CLI tool
 USER root
+
+# Ensure plugin CLI is available
 RUN jenkins-plugin-cli --version
 
-# Create plugins directory
+# Create plugin directory
 RUN mkdir -p /usr/share/jenkins/ref/plugins
 
-# Copy the list of required plugins
+# Copy plugins list
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 
-# Install the required plugins using the CLI
+# Install plugins (let Jenkins resolve correct versions)
 RUN jenkins-plugin-cli \
     --verbose \
     --war /usr/share/jenkins/jenkins.war \
     --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-
-# Switch back to Jenkins user
-USER jenkins
+# Overwrite with your custom built plugin if needed
+COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-
