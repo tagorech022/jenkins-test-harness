@@ -5,17 +5,21 @@ USER root
 # Create plugin directory
 RUN mkdir -p /usr/share/jenkins/ref/plugins
 
-# Copy plugin list
+# Copy plugin list for installation
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 
-# Install plugins
+# Install required plugins (excluding workflow-job; it will be overridden)
 RUN jenkins-plugin-cli \
     --verbose \
     --war /usr/share/jenkins/jenkins.war \
-    --plugin-file /usr/share/jenkins/ref/plugins.txt
+    --plugin-file /usr/share/jenkins/ref/plugins.txt \
+    --exclude-plugins workflow-job
 
-# Copy custom plugin .hpi (make sure this exists in your build context)
-COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-job.hpi
+# Copy custom workflow-job plugin built from your local Maven project
+COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-job.jpi
 
-# Restore Jenkins user
+# Set correct ownership for Jenkins plugin directory
+RUN chown -R jenkins:jenkins /usr/share/jenkins/ref/plugins
+
+# Switch back to Jenkins user
 USER jenkins
