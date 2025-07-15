@@ -1,16 +1,23 @@
 FROM jenkins/jenkins:lts-jdk17
 
-# Install plugins listed in plugins.txt using the Jenkins plugin CLI
+# Install plugin manager CLI (included in Jenkins image)
+USER root
+
+# Create plugins directory if not exists
+RUN mkdir -p /usr/share/jenkins/ref/plugins
+
+# Copy plugins list (optional if using plugins.txt)
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 
+# Download plugins from plugins.txt
 RUN jenkins-plugin-cli --verbose --war /usr/share/jenkins/jenkins.war \
     --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-# Copy your built plugin (.hpi)
+# Copy your custom built plugin (.hpi)
 COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-job.hpi
+
+# Set back to Jenkins user
+USER jenkins
 
 # Expose Jenkins default port
 EXPOSE 8080
-
-# Default Jenkins run command
-CMD ["bash", "-c", "/usr/bin/tini -- /usr/local/bin/jenkins.sh"]
