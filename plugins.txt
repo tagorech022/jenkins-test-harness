@@ -1,4 +1,4 @@
-blueocean
+blueocean:1.27.5
+workflow-aggregator
 credentials
 git
-workflow-aggregator
