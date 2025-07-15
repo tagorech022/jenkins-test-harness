@@ -17,8 +17,6 @@ RUN jenkins-plugin-cli \
     --war /usr/share/jenkins/jenkins.war \
     --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-# Copy your built custom plugin (ensure it exists before build)
-COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-job.hpi
 
 # Switch back to Jenkins user
 USER jenkins
