@@ -2,20 +2,22 @@ FROM jenkins/jenkins:lts-jdk17
 
 USER root
 
-# Ensure plugin CLI is available
-RUN jenkins-plugin-cli --version
-
 # Create plugin directory
 RUN mkdir -p /usr/share/jenkins/ref/plugins
 
-# Copy plugins list
+# Copy plugins list (include any other needed plugins here)
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 
-# Install plugins (let Jenkins resolve correct versions)
+# Install plugins using the Jenkins CLI
 RUN jenkins-plugin-cli \
     --verbose \
     --war /usr/share/jenkins/jenkins.war \
     --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-# Overwrite with your custom built plugin if needed
-COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-
+# Copy your built .hpi plugin from Maven build
+COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-job.hpi
+
+# Set ownership (optional but recommended for Jenkins user)
+RUN chown -R jenkins:jenkins /usr/share/jenkins/ref/plugins
+
+USER jenkins
