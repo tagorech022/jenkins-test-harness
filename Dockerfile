@@ -1,26 +1,25 @@
-# Use official Jenkins LTS image with JDK 17
+# Use Jenkins LTS with JDK 17 as base image
 FROM jenkins/jenkins:lts-jdk17
 
-# Skip the setup wizard
+# Skip setup wizard
 ENV JAVA_OPTS -Djenkins.install.runSetupWizard=false
 
-# Create plugins directory if it doesn't exist
+# Create plugin directory
 RUN mkdir -p /usr/share/jenkins/ref/plugins
 
-# Copy plugins.txt to image
+# Copy the list of plugins
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 
-# Install required plugins via jenkins-plugin-cli
+# Install plugins listed
 RUN jenkins-plugin-cli \
     --verbose \
     --war /usr/share/jenkins/jenkins.war \
     --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-# Copy your custom-built .hpi plugin to Jenkins plugin directory
-# Make sure this file exists in your build context (from Maven build)
+# Copy your built plugin (this MUST exist)
 COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-job.hpi
 
-# Set correct file ownership (optional but recommended)
+# Fix ownership (optional but good)
 USER root
 RUN chown -R jenkins:jenkins /usr/share/jenkins/ref/plugins
 USER jenkins
