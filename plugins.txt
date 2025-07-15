@@ -1,0 +1,6 @@
+workflow-job:2.44
+workflow-aggregator:2.6
+credentials:1264.vd9888e538b_33
+git:5.2.0
+pipeline-stage-view:2.33
+blueocean:1.27.5
