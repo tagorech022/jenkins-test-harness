@@ -1,6 +1,8 @@
-workflow-job:2.44
-workflow-aggregator:2.6
-credentials:1264.vd9888e538b_33
-git:5.2.0
-pipeline-stage-view:2.33
 blueocean:1.27.5
+workflow-job:1505.vea_4b_20a_4a_495
+credentials:1415.v831096eb_5534
+git:5.7.0
+ssh-credentials:359.v2191c4cf635f
+github-branch-source:1824.v046257273408
+pipeline-model-definition:2.2255.v56a_15e805f12
+plain-credentials:199.v9f8e1f741799
