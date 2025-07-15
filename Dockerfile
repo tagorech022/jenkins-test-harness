@@ -1,14 +1,16 @@
-# Step 1: Ensure you're in the correct directory
-cd /path/to/your/plugin/project
+FROM jenkins/jenkins:lts-jdk17
 
-# Step 2: Build the plugin
-mvn clean install
+# Install plugins listed in plugins.txt using the Jenkins plugin CLI
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 
-# Step 3: Ensure the .hpi file exists
-ls target/workflow-job.hpi
+RUN jenkins-plugin-cli --verbose --war /usr/share/jenkins/jenkins.war \
+    --plugin-file /usr/share/jenkins/ref/plugins.txt
 
-# Step 4: Ensure plugins.txt exists (or create it if not needed)
-touch plugins.txt  # Or add actual plugin list
+# Copy your built plugin (.hpi)
+COPY target/workflow-job.hpi /usr/share/jenkins/ref/plugins/workflow-job.hpi
 
-# Step 5: Build the Docker image
-docker build -t tagore405/jenkins-test-harness .
+# Expose Jenkins default port
+EXPOSE 8080
+
+# Default Jenkins run command
+CMD ["bash", "-c", "/usr/bin/tini -- /usr/local/bin/jenkins.sh"]
