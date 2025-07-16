@@ -1,11 +1,11 @@
-# Use Maven with Java 17
+# Base image with Maven and Java 17
 FROM maven:3.9.6-eclipse-temurin-17
 
-# Set working directory inside container
-WORKDIR /app
+# Set working directory
+WORKDIR /plugin
 
-# Copy plugin source code into container
+# Copy your plugin code into container
 COPY . .
 
-# Build and run tests using jenkins-test-harness
-RUN mvn verify
+# Run tests using jenkins-test-harness
+CMD ["mvn", "test"]
